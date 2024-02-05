@@ -8,8 +8,12 @@ public class Basket : MonoBehaviour
 {
     [Header("Set Dynamically")]
     public TextMeshProUGUI scoreGT;
+
+    public AudioSource audio;
     void Start()
     {
+
+        audio = GameObject.FindGameObjectWithTag("AudioCollection").GetComponent<AudioSource>();
         // Find a reference to the ScoreCounter GameObject
         GameObject scoreGO =
         GameObject.Find("ScoreCounter");
@@ -33,11 +37,21 @@ public class Basket : MonoBehaviour
         this.transform.position = pos;
     }
     void OnCollisionEnter(Collision coll)
-    { 
-      // Find out what hit this basket
+    {
+        // Find out what hit this basket
         GameObject collidedWith = coll.gameObject;
         if (collidedWith.tag == "Apple")
         {
+
+            if (collidedWith.GetComponent<Apple>().isBomb)
+            {
+                collidedWith.GetComponent<Apple>().GoBoom();
+                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<ApplePicker>().AppleDestroyed();
+            }
+            else 
+            {
+                audio.Play();
+            }
             Destroy(collidedWith);
             // Parse the text of the scoreGT into an int
             int score = int.Parse(scoreGT.text);

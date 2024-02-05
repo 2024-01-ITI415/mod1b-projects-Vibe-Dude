@@ -9,6 +9,8 @@ public class Apple : MonoBehaviour
 
     public bool isBomb = false;
 
+    public GameObject Explosion;
+
     public int pointVal = 100;
     void Update()
     {
@@ -24,5 +26,11 @@ public class Apple : MonoBehaviour
             // Call the public AppleDestroyed() method of apScript
             apScript.AppleDestroyed();
         }
+    }
+
+    public void GoBoom() 
+    {
+        Explosion.SetActive(true);
+        Explosion.transform.parent = null;
     }
 }
