@@ -5,8 +5,7 @@ using UnityEngine;
 public class AppleTree : MonoBehaviour
 {
     [Header("Set in Inspector")]
-    // Prefab for instantiating apples
-    public GameObject applePrefab;
+    public List<GameObject> spawnableObjects;
 
     // Speed at which the AppleTree moves
     public float speed = 1f;
@@ -27,7 +26,7 @@ public class AppleTree : MonoBehaviour
     }
     void DropApple()
     { 
-        GameObject apple = Instantiate<GameObject>(applePrefab);
+        GameObject apple = Instantiate<GameObject>(spawnableObjects[Random.Range(0,spawnableObjects.Count)]);
         apple.transform.position = transform.position;
         Invoke( "DropApple", secondsBetweenAppleDrops);
     }

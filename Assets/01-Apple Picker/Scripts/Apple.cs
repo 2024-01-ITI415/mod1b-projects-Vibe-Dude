@@ -6,11 +6,19 @@ public class Apple : MonoBehaviour
 {
     [Header("Set in Inspector")]
     public static float bottomY = -20f;
+
+    public bool isBomb = false;
+
+    public int pointVal = 100;
     void Update()
     {
         if (transform.position.y < bottomY)
         {
             Destroy(this.gameObject);
+            if (isBomb) 
+            {
+                return;
+            }
             // Get a reference to the ApplePicker component of Main Camera
             ApplePicker apScript = Camera.main.GetComponent<ApplePicker>(); 
             // Call the public AppleDestroyed() method of apScript

@@ -42,7 +42,7 @@ public class Basket : MonoBehaviour
             // Parse the text of the scoreGT into an int
             int score = int.Parse(scoreGT.text);
             // Add points for catching the apple
-            score += 100;
+            score += collidedWith.GetComponent<Apple>().pointVal;
             // Convert the score back to a string and display it
             scoreGT.text = score.ToString();
             // Track the high score
