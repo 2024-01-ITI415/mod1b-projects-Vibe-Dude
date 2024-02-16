@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEditor.VersionControl;
+using UnityEngine.SceneManagement;
 public enum GameMode
 {
     idle, playing, levelEnd
@@ -87,8 +89,9 @@ public class MissionDemolition : MonoBehaviour
         level++;
         if (level == levelMax)
         {
-            level = 0;
+                SceneManager.LoadScene("SceneMain");
         }
+        else
         StartLevel();
     }
     public void SwitchView(string eView = "")

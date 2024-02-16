@@ -9,7 +9,7 @@ public class Basket : MonoBehaviour
     [Header("Set Dynamically")]
     public TextMeshProUGUI scoreGT;
 
-    public AudioSource audio;
+    public new AudioSource audio;
     void Start()
     {
 
