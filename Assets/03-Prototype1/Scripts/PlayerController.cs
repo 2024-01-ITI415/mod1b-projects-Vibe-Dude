@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 // Allows class to be attached to GameObjects
 public class PlayerController : MonoBehaviour
@@ -11,6 +12,9 @@ public class PlayerController : MonoBehaviour
     public float lowJumpMultiplier = 2f; // Gravity multiplier for short jumps
     public float dashCooldown = 2f; // Dash cooldown
     public float wallSlideSpeed = 2f; // Wall slide
+    public float wallJumpPushOffDistance = 2f; // Controls the horizontal push-off distance
+    public float wallJumpPushOffTime = 0.2f; // For wall jump smoothing
+
 
     // Private state variables
     private Rigidbody rb; // Controls physics interactions
@@ -24,6 +28,11 @@ public class PlayerController : MonoBehaviour
     private float dashTimer; // Measures time remaining in dash
     private float timeSinceLastDash; // Tracks cooldown period between dashes
     private Vector3 dashDirection; // Determines direction of dash
+    private float timeSinceLastWallJump = 0f; // Timer to track wall jump cooldown
+    private bool isWallJumping = false; // For wall jump smoothing
+
+    // Indicates direction player is facing
+    private int facingDirection = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -55,16 +64,27 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(x, rb.velocity.y, 0);
         // Apply calculated movement to the Rigidbody
         rb.velocity = movement;
+        // Update facing direction based on input
+        if (x > 0) facingDirection = 1;
+        else if (x < 0) facingDirection = -1;
     }
 
     // Handles jumping logic
     void JumpLogic()
     {
         // Check for jump input, ground status, and jump count
-        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || jumpCount < maxJumpCount))
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isTouchingWall))
         {
-            // Apply jump force
-            rb.velocity = Vector3.up * jumpForce;
+            if (isTouchingWall && !isGrounded)
+            {
+                // Wall jump push player off the wall
+                StartCoroutine(SmoothWallJump(-facingDirection * wallJumpPushOffDistance, jumpForce));
+            }
+            else
+            {
+                // Regular jump
+                rb.velocity = Vector3.up * jumpForce;
+            }
             // Reset ground status and increment jump count
             isGrounded = false;
             jumpCount++;
@@ -72,11 +92,13 @@ public class PlayerController : MonoBehaviour
         // Apply additional gravity for faster falling
         if (rb.velocity.y < 0)
         {
+            // Increases the speed of falling
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
         // Apply modified gravity for shorter jumps
         else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.Space))
         {
+            //Makes jumps shorter if the jump button is released early
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
     }
@@ -110,6 +132,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isTouchingWall && !isGrounded)
         {
+            //Slows down the fall when sliding down a wall
             rb.velocity = new Vector3(rb.velocity.x, Mathf.Max(-wallSlideSpeed, rb.velocity.y), 0);
         }
     }
@@ -140,6 +163,37 @@ public class PlayerController : MonoBehaviour
 
         // Apply the dash velocity in the calculated direction during the dash
         rb.velocity = dashDirection / dashTime;
+    }
+
+    IEnumerator SmoothWallJump(float pushOffDistance, float jumpForce)
+    {
+        // Begins the wall jump
+        isWallJumping = true;
+
+        // Timer for how long the smooth wall jump lasts
+        float timer = 0;
+        while (timer < wallJumpPushOffTime)
+        {
+            // Adds time since the last frame to the timer
+            timer += Time.deltaTime;
+            float fraction = timer / wallJumpPushOffTime;
+
+            // Smoothly adjust the wall jump movement
+            rb.velocity = new Vector3(Mathf.Lerp(0, pushOffDistance, fraction), rb.velocity.y, 0);
+
+            // Applies an upward force to jump off the wall
+            if (timer <= Time.deltaTime)
+            {
+                // Starts the wall jump by pushing the player up.
+                rb.velocity = new Vector3(rb.velocity.x, jumpForce, 0);
+            }
+
+            // Waits for the next frame before continuing the loop
+            yield return null;
+        }
+
+        // Ends the wall jump
+        isWallJumping = false;
     }
 
     // Detects collisions with other objects
