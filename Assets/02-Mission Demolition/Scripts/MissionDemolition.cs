@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEditor.VersionControl;
 using UnityEngine.SceneManagement;
 public enum GameMode
 {

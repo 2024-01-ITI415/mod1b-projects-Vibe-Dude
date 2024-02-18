@@ -1,8 +1,5 @@
 // Extensive commenting for my own learning
 // Import necessary Unity libraries
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Presets;
 using UnityEngine;
 
 // Allows class to be attached to GameObjects
