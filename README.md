@@ -1,2 +1,8 @@
 # Module1-Projects
  ApplePicker, Mission Demolition and Prototype 1
+Project Goal
+For prototype 1 I made a very basic 2D platformer. I chose to take the concepts of movement from Roll-a-Ball and expand upon it. I added moving platforms that work similarly to the tree from ApplePicker. From Mission Demolition I implemented the follow camera and goal. The primary goal of the platformer game I made for this project is to create a fun experience that challenges players with various platforming mechanics throughout a level. I wanted to see how far I could bring the mechanics of a 2D platformer with the limited knowledge I had and without using someone elses premade player controller. I spent hours and hours trying to do many things that I ultimately couldn't get to work with my current coding knowledge. This prototype I've built is very bare-bones and can be built into something much more ambitious if I were to try making another 2D platformer in the future.
+
+Influence of Design Frameworks
+MDA Framework
+I started by creating core mechanics such as jumping, dashing, wall jumping, varying jump heights, and moving platforms. These mechanics were chosen to give the game a fast and smooth feel while providing room for creativity were I to have time to expand on the levels and obstacles the player must navigate. The dynamic interaction between the player and the game environment was intended to give a relaxing experience, with the aesthetic goal of achieving a satisfying and rewarding gameplay feel.
